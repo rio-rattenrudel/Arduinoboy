@@ -31,8 +31,6 @@ void modeLSDJKeyboardSetup()
   keyboardCurrentIns = 0;  //Set out current instrument to 0.
   keyboardLastIns    = 0;  //Set out last used instrument to 0.
 
-  keyboard.begin(PS2_DATA_PIN, PS2_CLOCK_PIN);
-
   modeLSDJKeyboard();      //.... And start the fun
 }
 

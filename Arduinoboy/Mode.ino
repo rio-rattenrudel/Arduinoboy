@@ -10,23 +10,23 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
- 
+
 /* ***************************************************************************/
 /* "Mode" Functions. Deals with changing the setup of arduino.              */
 /* ***************************************************************************/
 
  /*
-   setMode will check if the push button is depressed, If it is it will 
-   increment the mode number and make sure its in the 
+   setMode will check if the push button is depressed, If it is it will
+   increment the mode number and make sure its in the
    range 0 to 4 by mod (%). It will then write the mode to memory,
    set the leds to display the mode, and switch the code over to the
    right function.
  */
- 
+
 
 void setMode()
 {
-  buttonDepressed = !digitalRead(pinButtonMode);
+  buttonDepressed = digitalRead(pinButtonMode);
   if(!memory[MEM_FORCE_MODE] && buttonDepressed) { //if the button is pressed
     memory[MEM_MODE]++;                           //increment the mode number
     if(memory[MEM_MODE] > (NUMBER_OF_MODES - 1)) memory[MEM_MODE]=0;  //if the mode is greater then 4 it will wrap back to 0
@@ -39,7 +39,7 @@ void setMode()
 
  /*
    switchMode is only called from setMode. its responsible for
-   linking the mode number to its corrisponding function, 
+   linking the mode number to its corrisponding function,
    and then calling that function. function. function.
  */
 void switchMode()
@@ -76,11 +76,11 @@ void switchMode()
 /* ***************************************************************************/
 
  /*
-   sequencerStart is called when either LSDJ has started to play in master mode, 
+   sequencerStart is called when either LSDJ has started to play in master mode,
    or when a MIDI Start or continue command is received in lsdj slave mode.
    Basically it just resets some counters we use and sets a "start" flag.
  */
- 
+
 void sequencerStart()
 {
   sequencerStarted = true; //Sequencer has started?
@@ -110,5 +110,3 @@ void sequencerStop()
   digitalWrite(pinLeds[3],LOW);
   digitalWrite(pinLeds[memory[MEM_MODE]],HIGH);
 }
-
-

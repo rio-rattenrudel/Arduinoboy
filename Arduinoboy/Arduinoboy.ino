@@ -275,7 +275,6 @@ unsigned long int miscLedMaxTime;
 * Inbound Data Placeholders
 ***************************************************************************/
 byte incomingMidiByte;  //incomming midi message
-byte incomingPS2Byte;
 byte readgbClockLine;
 byte readGbSerialIn;
 byte bit;
