@@ -31,8 +31,6 @@ void modeLSDJKeyboardSetup()
   keyboardCurrentIns = 0;  //Set out current instrument to 0.
   keyboardLastIns    = 0;  //Set out last used instrument to 0.
 
-  keyboard.begin(PS2_DATA_PIN, PS2_CLOCK_PIN);
-
   modeLSDJKeyboard();      //.... And start the fun
 }
 
@@ -40,12 +38,6 @@ void modeLSDJKeyboardSetup()
 void modeLSDJKeyboard()
 {
   while(1){                              //Loop foreverrrr
-  if (keyboard.available()) {
-    incomingPS2Byte = keyboard.readScanCode();
-    if (incomingPS2Byte) {
-      sendKeyboardByteToGameboy(incomingPS2Byte);
-    }
-  }
 
   modeLSDJKeyboardMidiReceive();
   if (serial->available()) {          //If MIDI is sending
