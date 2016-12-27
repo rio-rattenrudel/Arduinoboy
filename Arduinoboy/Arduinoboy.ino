@@ -31,7 +31,7 @@
  *     - Serial Data from gameboy on analog in pin 2                       *
  *                                                                         *
  *   Teensy pin settings:                                                  *
- *     - 7 LEDS on pins 23,22,21,20,4,3,13                                 *
+ *     - 6 LEDS on pins 23,22,21,20,4,13                                   *
  *     - Push button on pin 2 (for selecting mode)                         *
  *     - MIDI Opto-isolator power connected to +3v                         *
  *     - Gameboy Clock line on pin 17                                      *
@@ -157,7 +157,12 @@ byte memory[MEM_MAX];
 ***************************************************************************/
 #if defined (__MK20DX256__) || defined (__MK20DX128__) || defined (__MKL26Z64__)
 #define USE_TEENSY 1
+
+#if defined (__MKL26Z64__)
+#define GB_SET(bit_cl,bit_out,bit_in) GPIOB_PDOR = ((bit_in<<3) | (bit_out<<1) | bit_cl)
+#else
 #define GB_SET(bit_cl,bit_out,bit_in) GPIOB_PDOR = (GPIOB_PDIR & 0xfffffff4) | ((bit_in<<3) | (bit_out<<1) | bit_cl)
+#endif
 
 int pinGBClock     = 16;    // Analog In 0 - clock out to gameboy
 int pinGBSerialOut = 17;    // Analog In 1 - serial data to gameboy
