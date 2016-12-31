@@ -1,5 +1,9 @@
 # Change log
 
+### 2.0.0
+ - PS/2 jack is now dual mode
+ - Broke compatibility with official schematic by moving mode button from pin 3 to pin 2
+
 ### 1.1.3
  - Changed status mode names
 
