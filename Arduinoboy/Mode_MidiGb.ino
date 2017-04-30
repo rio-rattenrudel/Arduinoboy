@@ -129,16 +129,16 @@ void modeMidiGbUsbMidiReceive()
         if(ch == memory[MEM_MGB_CH]) {
             ch = 0;
             send = true;
-        } else if (midiStatusChannel == memory[MEM_MGB_CH+1]) {
+        } else if (ch == memory[MEM_MGB_CH+1]) {
             ch = 1;
             send = true;
-        } else if (midiStatusChannel == memory[MEM_MGB_CH+2]) {
+        } else if (ch == memory[MEM_MGB_CH+2]) {
             ch = 2;
             send = true;
-        } else if (midiStatusChannel == memory[MEM_MGB_CH+3]) {
+        } else if (ch == memory[MEM_MGB_CH+3]) {
             ch = 3;
             send = true;
-        } else if (midiStatusChannel == memory[MEM_MGB_CH+4]) {
+        } else if (ch == memory[MEM_MGB_CH+4]) {
             ch = 4;
             send = true;
         }
@@ -157,6 +157,7 @@ void modeMidiGbUsbMidiReceive()
                 delayMicroseconds(GB_MIDI_DELAY);
                 sendByteToGameboy(usbMIDI.getData2());
                 delayMicroseconds(GB_MIDI_DELAY);
+                blinkLight(s, usbMIDI.getData2());
             break;
             case 3: // CC
                 sendByteToGameboy(0xB0+ch);
@@ -165,12 +166,14 @@ void modeMidiGbUsbMidiReceive()
                 delayMicroseconds(GB_MIDI_DELAY);
                 sendByteToGameboy(usbMIDI.getData2());
                 delayMicroseconds(GB_MIDI_DELAY);
+                blinkLight(0xB0+ch, usbMIDI.getData2());
             break;
             case 4: // PG
                 sendByteToGameboy(0xC0+ch);
                 delayMicroseconds(GB_MIDI_DELAY);
                 sendByteToGameboy(usbMIDI.getData1());
                 delayMicroseconds(GB_MIDI_DELAY);
+                blinkLight(0xC0+ch, usbMIDI.getData2());
             break;
             case 6: // PB
                 sendByteToGameboy(0xE0+ch);
@@ -183,7 +186,6 @@ void modeMidiGbUsbMidiReceive()
         }
 
         statusLedOn();
-        blinkLight(midiData[0],midiData[2]);
     }
 #endif
 }
