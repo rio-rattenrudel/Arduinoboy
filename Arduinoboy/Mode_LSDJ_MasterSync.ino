@@ -122,3 +122,7 @@ void sendMidiClockSlaveFromLSDJ()
   countGbClockTicks++;              //Increment the bit counter
  if(countGbClockTicks==8) countGbClockTicks=0;
 }
+
+
+
+

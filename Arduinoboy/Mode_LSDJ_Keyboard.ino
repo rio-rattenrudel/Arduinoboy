@@ -19,6 +19,9 @@ void modeLSDJKeyboardSetup()
  #ifdef MIDI_INTERFACE
   usbMIDI.setHandleRealTimeSystem(NULL);
  #endif
+ #ifndef USE_TEENSY
+  keyboard.begin(PS2_DATA_PIN, PS2_CLOCK_PIN);
+ #endif
   blinkMaxCount=1000;
 
   /* The stuff below makes sure the code is in the same state as LSDJ on reset / restart, mode switched, etc. */
@@ -31,6 +34,7 @@ void modeLSDJKeyboardSetup()
   keyboardCurrentIns = 0;  //Set out current instrument to 0.
   keyboardLastIns    = 0;  //Set out last used instrument to 0.
 
+
   modeLSDJKeyboard();      //.... And start the fun
 }
 
@@ -38,7 +42,14 @@ void modeLSDJKeyboardSetup()
 void modeLSDJKeyboard()
 {
   while(1){                              //Loop foreverrrr
-
+ #ifndef USE_TEENSY
+  if (keyboard.available()) {
+    incomingPS2Byte = keyboard.readScanCode();
+    if (incomingPS2Byte) {
+     sendKeyboardByteToGameboy(incomingPS2Byte);
+    }
+  }
+ #endif
   modeLSDJKeyboardMidiReceive();
   if (serial->available()) {          //If MIDI is sending
     incomingMidiByte = serial->read();    //Get the byte sent from MIDI
@@ -262,3 +273,7 @@ void modeLSDJKeyboardMidiReceive()
     }
 #endif
 }
+
+
+
+
