@@ -178,12 +178,7 @@ HardwareSerial *serial = &Serial1;
 * Arudino Atmega 328 (assumed)
 ***************************************************************************/
 #else
-#include <PS2Keyboard.h>
 
-// values for the PS/2 Keyboard input
-#define PS2_DATA_PIN 7
-#define PS2_CLOCK_PIN 3
-PS2Keyboard keyboard;
 #define GB_SET(bit_cl,bit_out,bit_in) PORTC = (PINC & B11111000) | ((bit_in<<2) | ((bit_out)<<1) | bit_cl)
 // ^ The reason for not using digitalWrite is to allign clock and data pins for the GB shift reg.
 
@@ -450,7 +445,3 @@ void loop () {
   setMode();
   switchMode();
 }
-
-
-
-
