@@ -157,6 +157,8 @@ byte memory[MEM_MAX];
 ***************************************************************************/
 #if defined (__MK20DX256__) || defined (__MK20DX128__) || defined (__MKL26Z64__)
 #define USE_TEENSY 1
+#define MIDI_INTERFACE 1
+#include <MIDI.h>
 
 #if defined (__MKL26Z64__)
 #define GB_SET(bit_cl,bit_out,bit_in) GPIOB_PDOR = ((bit_in<<3) | (bit_out<<1) | bit_cl)
@@ -450,6 +452,7 @@ void loop () {
   setMode();
   switchMode();
 }
+
 
 
 

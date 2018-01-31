@@ -145,10 +145,10 @@ void modeMidiGbUsbMidiReceive()
         if(!send) return;
         uint8_t s;
         switch(usbMIDI.getType()) {
-            case 0: // note off
-            case 1: // note on
+            case 0x80: // note off
+            case 0x90: // note on
                 s = 0x90 + ch;
-                if(!usbMIDI.getType()) {
+                if(usbMIDI.getType() == 0x80) {
                     s = 0x80 + ch;
                 }
                 sendByteToGameboy(s);
@@ -159,7 +159,7 @@ void modeMidiGbUsbMidiReceive()
                 delayMicroseconds(GB_MIDI_DELAY);
                 blinkLight(s, usbMIDI.getData2());
             break;
-            case 3: // CC
+            case 0xB0: // CC
                 sendByteToGameboy(0xB0+ch);
                 delayMicroseconds(GB_MIDI_DELAY);
                 sendByteToGameboy(usbMIDI.getData1());
@@ -168,14 +168,14 @@ void modeMidiGbUsbMidiReceive()
                 delayMicroseconds(GB_MIDI_DELAY);
                 blinkLight(0xB0+ch, usbMIDI.getData2());
             break;
-            case 4: // PG
+            case 0xC0: // PG
                 sendByteToGameboy(0xC0+ch);
                 delayMicroseconds(GB_MIDI_DELAY);
                 sendByteToGameboy(usbMIDI.getData1());
                 delayMicroseconds(GB_MIDI_DELAY);
                 blinkLight(0xC0+ch, usbMIDI.getData2());
             break;
-            case 6: // PB
+            case 0xE0: // PB
                 sendByteToGameboy(0xE0+ch);
                 delayMicroseconds(GB_MIDI_DELAY);
                 sendByteToGameboy(usbMIDI.getData1());
@@ -189,7 +189,6 @@ void modeMidiGbUsbMidiReceive()
     }
 #endif
 }
-
 
 
 

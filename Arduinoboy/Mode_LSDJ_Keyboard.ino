@@ -252,13 +252,13 @@ void modeLSDJKeyboardMidiReceive()
 
     while(usbMIDI.read(memory[MEM_KEYBD_CH]+1)) {
         switch(usbMIDI.getType()) {
-            case 0: // note off
+            case 0x80: // note off
                 playLSDJNote(0x90+memory[MEM_KEYBD_CH], usbMIDI.getData1(), 0);
             break;
-            case 1: // note on
+            case 0x90: // note on
                 playLSDJNote(0x90+memory[MEM_KEYBD_CH], usbMIDI.getData1(), usbMIDI.getData2());
             break;
-            case 4: // PG
+            case 0xC0: // PG
                 changeLSDJInstrument(0xC0+memory[MEM_KEYBD_CH], usbMIDI.getData1());
             break;
             /*
@@ -273,7 +273,3 @@ void modeLSDJKeyboardMidiReceive()
     }
 #endif
 }
-
-
-
-

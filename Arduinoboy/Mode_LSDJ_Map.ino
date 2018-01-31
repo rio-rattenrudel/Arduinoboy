@@ -180,10 +180,10 @@ void modeLSDJMapUsbMidiReceive()
         }
 
         switch(usbMIDI.getType()) {
-            case 0: // note off
+            case 0x80: // note off
                 setMapByte(0xFE, true);
             break;
-            case 1: // note on
+            case 0x90: // note on
                 if(ch == (memory[MEM_LIVEMAP_CH] + 1)) {
                     setMapByte(128+usbMIDI.getData1(), true);
                 } else {
@@ -204,7 +204,6 @@ void modeLSDJMapUsbMidiReceive()
     }
 #endif
 }
-
 
 
 

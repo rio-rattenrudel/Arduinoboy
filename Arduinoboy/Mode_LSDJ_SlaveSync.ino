@@ -164,7 +164,7 @@ void modeLSDJSlaveSyncUsbMidiReceive()
 
     while(usbMIDI.read(memory[MEM_LSDJSLAVE_MIDI_CH]+1)) {
         switch(usbMIDI.getType()) {
-            case 1: // note on
+            case 0x90: // note on
                 getSlaveSyncEffect(usbMIDI.getData1());
             break;
             /*
@@ -183,7 +183,6 @@ void modeLSDJSlaveSyncUsbMidiReceive()
     }
 #endif
 }
-
 
 
 
