@@ -5,7 +5,7 @@ This is a fork of trash80's official code. It adds the following changes:
 
  - Mode button input pin has been moved from pin 3 to pin 2.
  - Mode button uses an internal pull up resistor instead of an external pull down resistor
- - Added dependency on [this library](https://github.com/PaulStoffregen/PS2Keyboard) to handle PS/2 communication. To install, [download](https://github.com/PaulStoffregen/PS2Keyboard/archive/master.zip) the library, and extract it into your Arduino Libraries folder (typically Documents/Arduino/libraries). Do not attempt to install a PS/2 library from the Arduino library manager as that version will not work with this code.
+ - Added dependency on [this library](https://www.pjrc.com/teensy/td_libs_PS2Keyboard.html) to handle PS/2 communication. To install, [download](https://github.com/PaulStoffregen/PS2Keyboard/archive/master.zip) the library, and extract it into your Arduino Libraries folder (typically Documents/Arduino/libraries). Do not attempt to install a PS/2 library from the Arduino library manager as that version will not work with this code.
 - Added a midi device name ("teensyboy") when using USB midi with a teensy
 
 ![ScreenShot](http://trash80.net/arduinoboy/aboy1_2_0.jpg)
