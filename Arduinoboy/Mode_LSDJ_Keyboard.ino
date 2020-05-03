@@ -16,10 +16,10 @@ void modeLSDJKeyboardSetup()
   digitalWrite(pinStatusLed,LOW);
   pinMode(pinGBClock,OUTPUT);
   digitalWrite(pinGBClock,HIGH);
- #ifdef MIDI_INTERFACE
+ #ifdef USE_TEENSY
   usbMIDI.setHandleRealTimeSystem(NULL);
  #endif
- #ifndef USE_TEENSY
+ #ifndef USE_USB
   keyboard.begin(PS2_DATA_PIN, PS2_CLOCK_PIN);
  #endif
   blinkMaxCount=1000;
@@ -42,7 +42,7 @@ void modeLSDJKeyboardSetup()
 void modeLSDJKeyboard()
 {
   while(1){                              //Loop foreverrrr
- #ifndef USE_TEENSY
+ #ifndef USE_USB
   if (keyboard.available()) {
     incomingPS2Byte = keyboard.readScanCode();
     if (incomingPS2Byte) {
@@ -248,7 +248,7 @@ void sendKeyboardByteToGameboy(byte send_byte)
 
 void modeLSDJKeyboardMidiReceive()
 {
-#ifdef MIDI_INTERFACE
+#ifdef USE_TEENSY
 
     while(usbMIDI.read(memory[MEM_KEYBD_CH]+1)) {
         switch(usbMIDI.getType()) {
@@ -271,5 +271,27 @@ void modeLSDJKeyboardMidiReceive()
             */
         }
     }
+#endif
+#ifdef USE_LEONARDO
+
+    midiEventPacket_t rx;
+    do {
+      rx = MidiUSB.read();
+      switch (rx.header)
+        {
+        case 0x08: // note off
+          playLSDJNote(0x90+memory[MEM_KEYBD_CH], rx.byte2, 0);
+          statusLedOn();
+          break;
+        case 0x09: // note on
+          playLSDJNote(0x90+memory[MEM_KEYBD_CH], rx.byte2, rx.byte3);
+          statusLedOn();
+          break;
+        case 0x0C: // PG
+          changeLSDJInstrument(0xC0+memory[MEM_KEYBD_CH], rx.byte2);
+          statusLedOn();
+          break;
+      }
+    } while (rx.header != 0);
 #endif
 }

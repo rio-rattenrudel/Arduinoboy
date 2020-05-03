@@ -10,7 +10,7 @@
  ***************************************************************************
  ***************************************************************************
  *                                                                         *
- * Version: 1.3.1                                                          *
+ * Version: 1.3.2                                                          *
  * Date:    April 24 2020                                                  *
  * Name:    Timothy Lamb                                                   *
  * Email:   trash80@gmail.com                                              *
@@ -160,7 +160,7 @@ byte memory[MEM_MAX];
 ***************************************************************************/
 #if defined (__MK20DX256__) || defined (__MK20DX128__) || defined (__MKL26Z64__)
 #define USE_TEENSY 1
-#define MIDI_INTERFACE 1
+#define USE_USB 1
 #include <MIDI.h>
 
 #if defined (__MKL26Z64__)
@@ -180,10 +180,11 @@ int pinButtonMode = 2; //toggle button for selecting the mode
 HardwareSerial *serial = &Serial1;
 
 /***************************************************************************
-* Arudino Leonardo
+* Arduino Leonardo
 ***************************************************************************/
 #elif defined (__AVR_ATmega32U4__)
 #define USE_LEONARDO
+#include <MIDIUSB.h>
 #include <PS2Keyboard.h>
 
 // values for the PS/2 Keyboard input
@@ -192,6 +193,7 @@ HardwareSerial *serial = &Serial1;
 PS2Keyboard keyboard;
 #define GB_SET(bit_cl, bit_out, bit_in) PORTF = (PINF & B00011111) | ((bit_cl<<7) | ((bit_out)<<6) | ((bit_in)<<5))
 // ^ The reason for not using digitalWrite is to allign clock and data pins for the GB shift reg.
+// Pin distribution comes from official Arduino Leonardo documentation
 
 int pinGBClock     = A0;    // Analog In 0 - clock out to gameboy
 int pinGBSerialOut = A1;    // Analog In 1 - serial data to gameboy
@@ -423,7 +425,7 @@ void setup() {
   Set MIDI Serial Rate
 */
 
-#ifdef USE_TEENSY
+#ifdef USE_USB
   serial->begin(31250); //31250
 #else
   if(usbMode == true) {

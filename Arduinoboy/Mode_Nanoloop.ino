@@ -17,7 +17,7 @@ void modeNanoloopSetup()
   pinMode(pinGBClock,OUTPUT);
   digitalWrite(pinGBClock,HIGH);
 
-#ifdef MIDI_INTERFACE
+#ifdef USE_TEENSY
   usbMIDI.setHandleRealTimeSystem(usbMidiNanoloopRealtimeMessage);
 #endif
 
@@ -28,7 +28,9 @@ void modeNanoloopSetup()
 void modeNanoloopSync()
 {
   while(1){  //Loop forever
-  modeNanoloopUsbMidiReceive();
+
+    modeNanoloopUsbMidiReceive();
+
   if (serial->available()) {                 //If MIDI Byte Availaibleleleiel
     incomingMidiByte = serial->read();           //Read it
     if(!checkForProgrammerSysex(incomingMidiByte) && !usbMode) serial->write(incomingMidiByte);       //Send it back to the Midi out
@@ -113,7 +115,7 @@ void usbMidiNanoloopRealtimeMessage(uint8_t message)
 
 void modeNanoloopUsbMidiReceive()
 {
-#ifdef MIDI_INTERFACE
+#ifdef USE_TEENSY
 
     while(usbMIDI.read(memory[MEM_LSDJSLAVE_MIDI_CH]+1)) {
         switch(usbMIDI.getType()) {
@@ -135,4 +137,14 @@ void modeNanoloopUsbMidiReceive()
         }
     }
 #endif
+
+#ifdef USE_LEONARDO
+  midiEventPacket_t rx;
+  do
+  {
+    rx = MidiUSB.read();
+    usbMidiNanoloopRealtimeMessage(rx.byte1);
+  } while (rx.header != 0);
+#endif
+
 }
