@@ -152,7 +152,7 @@ byte memory[MEM_MAX];
 
 
 /***************************************************************************
-* Teensy 3.2, Teensy 3.0, Teensy LC
+* Teensy 3.2, Teensy LC
 *
 * Notes on Teensy: Pins are not the same as in the schematic, the mapping is below.
 * Feel free to change, all related config in is this block.
@@ -180,7 +180,7 @@ int pinButtonMode = 2; //toggle button for selecting the mode
 HardwareSerial *serial = &Serial1;
 
 /***************************************************************************
-* Arduino Leonardo
+* Arduino Leonardo/Yún/Micro (ATmega32U4)
 ***************************************************************************/
 #elif defined (__AVR_ATmega32U4__)
 #define USE_LEONARDO
@@ -209,7 +209,7 @@ byte incomingPS2Byte;
 
 
 /***************************************************************************
-* Arudino Atmega 328 (assumed)
+* Arduino UNO/Ethernet/Nano (ATmega328) or Mega 2560 (ATmega2560) (assumed)
 ***************************************************************************/
 #else
 #include <PS2Keyboard.h>
