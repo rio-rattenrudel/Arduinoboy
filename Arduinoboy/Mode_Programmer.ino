@@ -120,7 +120,9 @@ void clearSysexBuffer()
 void setMode(byte mode)
 {
   memory[MEM_MODE] = mode;
+  #ifndef USE_DUE
   EEPROM.write(MEM_MODE, memory[MEM_MODE]);
+  #endif
   showSelectedMode();
   switchMode();
 }
@@ -221,25 +223,3 @@ void blinkSelectedLight(int led)
       blinkSwitch[led]=1;
       blinkSwitchTime[led]=0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
