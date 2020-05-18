@@ -1,16 +1,12 @@
 ## Changelog
 
 ### 05/17/20
-* Arduinoboy to version 1.3.4
+* Arduinoboy to version 1.3.3
 * Added support for Arduino Due
 
 ### 05/03/20
-* Arduinoboy to version 1.3.3
-* Added support for Arduino Leonardo/Yún/Micro (ATmega32U4) (only Leonardo tested)
-
-### 04/30/20
 * Arduinoboy to version 1.3.2
-* Added support for modified mGB versions with extended MIDI channels
+* Added support for Arduino Leonardo/Yún/Micro (ATmega32U4) (only Leonardo tested)
 
 ### 04/19/20
 * Arduinoboy to version 1.3.1
