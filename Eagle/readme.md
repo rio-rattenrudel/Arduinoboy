@@ -32,3 +32,8 @@
 ### 0.0.1
  - Beta/test release
  - Used familiar's design
+
+# Micro version Change log
+
+### 1.0.0
+- Initial version
