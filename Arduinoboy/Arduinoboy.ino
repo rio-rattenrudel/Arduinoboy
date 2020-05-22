@@ -183,12 +183,7 @@ HardwareSerial *serial = &Serial1;
 #elif defined (__AVR_ATmega32U4__)
 #define USE_LEONARDO
 #include <MIDIUSB.h>
-#include <PS2Keyboard.h>
 
-// values for the PS/2 Keyboard input
-#define PS2_DATA_PIN 7
-#define PS2_CLOCK_PIN 3
-//PS2Keyboard keyboard;
 // #define GB_SET(bit_cl, bit_out, bit_in) PORTF = (PINF & B00011111) | ((bit_cl<<7) | ((bit_out)<<6) | ((bit_in)<<5))
 #define GB_SET(bit_cl, bit_out, bit_in) PORTF = (PINF & B00011111) | ((bit_cl << 7) | ((bit_in) << 6) | ((bit_out) << 5))
 // ^ The reason for not using digitalWrite is to allign clock and data pins for the GB shift reg.
@@ -204,16 +199,13 @@ int pinButtonMode = 2; //toggle button for selecting the mode
 
 HardwareSerial *serial = &Serial1;
 
-byte incomingPS2Byte;
-
-
 /***************************************************************************
 * Arduino Due (ATmSAM3X8E)
 ***************************************************************************/
 #elif defined (__SAM3X8E__)
 #define USE_DUE
+#define USE_PS2
 
-#define USE_LEONARDO
 #include <MIDIUSB.h>
 #include <PS2Keyboard.h>
 #include <digitalWriteFast.h>
@@ -245,6 +237,8 @@ byte incomingPS2Byte;
 * Arduino UNO/Ethernet/Nano (ATmega328), Arduino UNO Wifi (ATmega4809) or Mega 2560 (ATmega2560/ATmega1280) (assumed)
 ***************************************************************************/
 #else
+#define USE_PS2
+
 #include <PS2Keyboard.h>
 
 // values for the PS/2 Keyboard input

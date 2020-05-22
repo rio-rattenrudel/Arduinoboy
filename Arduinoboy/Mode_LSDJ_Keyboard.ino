@@ -19,7 +19,7 @@ void modeLSDJKeyboardSetup()
  #ifdef USE_TEENSY
   usbMIDI.setHandleRealTimeSystem(NULL);
  #endif
- #ifndef USE_USB
+ #ifdef USE_PS2
   keyboard.begin(PS2_DATA_PIN, PS2_CLOCK_PIN);
  #endif
   blinkMaxCount=1000;
@@ -42,7 +42,7 @@ void modeLSDJKeyboardSetup()
 void modeLSDJKeyboard()
 {
   while(1){                              //Loop foreverrrr
- #ifndef USE_USB
+ #ifdef USE_PS2
   if (keyboard.available()) {
     incomingPS2Byte = keyboard.readScanCode();
     if (incomingPS2Byte) {
