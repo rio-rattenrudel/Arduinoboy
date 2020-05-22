@@ -113,7 +113,7 @@
 boolean usbMode                  = false; //to use usb for serial communication as oppose to MIDI - sets baud rate to 38400
 
 byte defaultMemoryMap[MEM_MAX] = {
-  0x7F,0x01,0x03,0x7F, //memory init check
+  0xFF,0x01,0x03,0x7F, //memory init check
   0x00, //force mode (forces lsdj to be sl)
   0x00, //mode
 
