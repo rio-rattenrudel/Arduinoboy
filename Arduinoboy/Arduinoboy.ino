@@ -184,14 +184,15 @@ HardwareSerial *serial = &Serial1;
 // values for the PS/2 Keyboard input
 #define PS2_DATA_PIN 7
 #define PS2_CLOCK_PIN 3
-PS2Keyboard keyboard;
-#define GB_SET(bit_cl, bit_out, bit_in) PORTF = (PINF & B00011111) | ((bit_cl<<7) | ((bit_out)<<6) | ((bit_in)<<5))
+//PS2Keyboard keyboard;
+// #define GB_SET(bit_cl, bit_out, bit_in) PORTF = (PINF & B00011111) | ((bit_cl<<7) | ((bit_out)<<6) | ((bit_in)<<5))
+#define GB_SET(bit_cl, bit_out, bit_in) PORTF = (PINF & B00011111) | ((bit_cl << 7) | ((bit_in) << 6) | ((bit_out) << 5))
 // ^ The reason for not using digitalWrite is to allign clock and data pins for the GB shift reg.
 // Pin distribution comes from official Arduino Leonardo documentation
 
-int pinGBClock     = A0;    // Analog In 0 - clock out to gameboy
-int pinGBSerialOut = A1;    // Analog In 1 - serial data to gameboy
-int pinGBSerialIn  = A2;    // Analog In 2 - serial data from gameboy
+int pinGBClock = A0;                    // Analog In 0 - clock out to gameboy
+int pinGBSerialIn = A1;                 // Analog In 1 - serial data from gameboy
+int pinGBSerialOut = A2;                // Analog In 2 - serial data to gameboy
 int pinMidiInputPower = 4; // power pin for midi input opto-isolator
 int pinStatusLed = 13; // Status LED
 int pinLeds[] = {12,11,10,9,8,13}; // LED Pins
