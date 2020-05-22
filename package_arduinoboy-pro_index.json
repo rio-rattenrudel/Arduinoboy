@@ -10,7 +10,7 @@
           {
             "category": "Contributed", 
             "name": "Arduinoboy Pro", 
-            "url": "https://github.com/catskull/Arduinoboy/blob/leonardo/arduinoboy-pro.zip", 
+            "url": "https://github.com/catskull/Arduinoboy/raw/leonardo/arduinoboy-pro.zip", 
             "checksum": "SHA-256:dd9ca4f47401cdaa6db30b7d7265abf8afa7d350f65b263289a26d19fc822127", 
             "help": {
               "online": ""
