@@ -75,7 +75,8 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-#define MEM_MAX 65
+
+#define MEM_MAX 75
 #define NUMBER_OF_MODES 7    //Right now there are 7 modes, Might be more in the future
 
 //!!! do not edit these, they are the position in EEPROM memory that contain the value of each stored setting
@@ -100,10 +101,10 @@
 #define MEM_MIDIOUT_CC_NUMBERS 27
 
 #define MEM_MGB_CH 55
-#define MEM_LIVEMAP_CH 60
+#define MEM_LIVEMAP_CH 70
 
-#define MEM_MIDIOUT_BIT_DELAY 61
-#define MEM_MIDIOUT_BYTE_DELAY 63
+#define MEM_MIDIOUT_BIT_DELAY 71
+#define MEM_MIDIOUT_BYTE_DELAY 73
 
 /***************************************************************************
 * User Settings
@@ -112,7 +113,7 @@
 boolean usbMode                  = false; //to use usb for serial communication as oppose to MIDI - sets baud rate to 38400
 
 byte defaultMemoryMap[MEM_MAX] = {
-  0x7F,0x01,0x03,0x7F, //memory init check
+  0xFF,0x01,0x03,0x7F, //memory init check
   0x00, //force mode (forces lsdj to be sl)
   0x00, //mode
 
@@ -134,6 +135,9 @@ byte defaultMemoryMap[MEM_MAX] = {
   1,2,3,7,10,11,12, //noi
 
   0, 1, 2, 3, 4, //mGB midi channels (0-15 = 1-16)
+  5, 6, 7, 8, 9, //mGB midi channels (0-15 = 1-16)
+  10, 11, 12, 13, 14, //mGB midi channels (0-15 = 1-16)
+
   0, //sync map midi channel start (0-15 = 1-16) (for song rows 0x80 to 0xFF it's this channel plus 1)
   80,1,  //midiout bit check delay & bit check delay multiplier
   0,0//midiout byte received delay & byte received delay multiplier
@@ -196,7 +200,7 @@ int pinGBSerialOut = A2;                // Analog In 2 - serial data to gameboy
 int pinMidiInputPower = 4; // power pin for midi input opto-isolator
 int pinStatusLed = 13; // Status LED
 int pinLeds[] = {12,11,10,9,8,13}; // LED Pins
-int pinButtonMode = 3; //toggle button for selecting the mode
+int pinButtonMode = 2; //toggle button for selecting the mode
 
 HardwareSerial *serial = &Serial1;
 
@@ -230,7 +234,7 @@ int pinGBSerialIn  = A2;    // Analog In 2 - serial data from gameboy
 int pinMidiInputPower = 4; // power pin for midi input opto-isolator
 int pinStatusLed = 13; // Status LED
 int pinLeds[] = {12,11,10,9,8,13}; // LED Pins
-int pinButtonMode = 3; //toggle button for selecting the mode
+int pinButtonMode = 2; //toggle button for selecting the mode
 
 HardwareSerial *serial = &Serial;
 
@@ -262,7 +266,7 @@ int pinGBSerialIn  = A2;    // Analog In 2 - serial data from gameboy
 int pinMidiInputPower = 4; // power pin for midi input opto-isolator
 int pinStatusLed = 13; // Status LED
 int pinLeds[] = {12,11,10,9,8,13}; // LED Pins
-int pinButtonMode = 3; //toggle button for selecting the mode
+int pinButtonMode = 2; //toggle button for selecting the mode
 
 HardwareSerial *serial = &Serial;
 
@@ -455,7 +459,7 @@ void setup() {
 */
   for(int led=0;led<=5;led++) pinMode(pinLeds[led],OUTPUT);
   pinMode(pinStatusLed,OUTPUT);
-  pinMode(pinButtonMode,INPUT);
+  pinMode(pinButtonMode,INPUT_PULLUP);
 
   pinMode(pinGBClock,OUTPUT);
   pinMode(pinGBSerialIn,INPUT);
