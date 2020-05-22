@@ -1,45 +1,41 @@
 {
-    "packages": [
-      {
-        "maintainer": "Catskull Electronics", 
-        "help": {
-          "online": "https://catskullelectronics.com"
-        }, 
-        "websiteURL": "https://github.com/catskull/Arduinoboy", 
-        "platforms": [
-          {
-            "category": "Contributed", 
-            "name": "Arduinoboy Pro", 
-            "url": "https://github.com/catskull/Arduinoboy/blob/leonardo/arduinoboy-pro.zip", 
-            "checksum": "SHA-256:dd9ca4f47401cdaa6db30b7d7265abf8afa7d350f65b263289a26d19fc822127", 
-            "help": {
-              "online": ""
-            }, 
-            "version": "1.0.0", 
-            "architecture": "avr", 
-            "archiveFileName": "arduinoboy-pro.zip", 
-            "boards": [
-              {
-                "name": "Arduinoboy Pro"
-              }
-            ],
-            "size": "5895197",
-            "toolsDependencies": [
-              {
-                "packager": "arduino",
-                "name": "avr-gcc",
-                "version": "4.8.1-arduino5"
-              },
-              {
-                "packager": "arduino",
-                "name": "avrdude",
-                "version": "6.0.1-arduino5"
-              }
-            ]
-          }
-        ], 
-        "email": "support@catskullelectronics.com", 
-        "name": "arduinoboy"
-      }
-    ]
-  }
+  "maintainer": "Catskull Electronics", 
+  "help": {
+    "online": "https://catskullelectronics.com"
+  }, 
+  "websiteURL": "https://github.com/catskull/Arduinoboy", 
+  "platforms": [
+    {
+      "category": "Contributed", 
+      "name": "Arduinoboy Pro", 
+      "url": "https://github.com/catskull/Arduinoboy/blob/leonardo/arduinoboy-pro.zip", 
+      "checksum": "SHA-256:dd9ca4f47401cdaa6db30b7d7265abf8afa7d350f65b263289a26d19fc822127", 
+      "help": {
+        "online": ""
+      }, 
+      "version": "1.0.0", 
+      "architecture": "avr", 
+      "archiveFileName": "arduinoboy-pro.zip", 
+      "boards": [
+        {
+          "name": "Arduinoboy Pro"
+        }
+      ],
+      "size": "5895197",
+      "toolsDependencies": [
+        {
+          "packager": "arduino",
+          "name": "avr-gcc",
+          "version": "4.8.1-arduino5"
+        },
+        {
+          "packager": "arduino",
+          "name": "avrdude",
+          "version": "6.0.1-arduino5"
+        }
+      ]
+    }
+  ], 
+  "email": "support@catskullelectronics.com", 
+  "name": "arduinoboy"
+}
