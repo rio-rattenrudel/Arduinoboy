@@ -34,7 +34,7 @@ void modeMidiGb()
     if (serial->available()) {          //If MIDI is sending
       incomingMidiByte = serial->read();    //Get the byte sent from MIDI
 
-      if(!checkForProgrammerSysex(incomingMidiByte) && !usbMode) serial->write(incomingMidiByte); //Echo the Byte to MIDI Output
+      if(!checkForProgrammerSysex(incomingMidiByte)) serial->write(incomingMidiByte); //Echo the Byte to MIDI Output
 
       if(incomingMidiByte & 0x80) {
         switch (incomingMidiByte & 0xF0) {

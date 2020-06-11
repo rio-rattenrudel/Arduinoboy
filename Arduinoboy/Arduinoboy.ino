@@ -109,8 +109,6 @@
 * User Settings
 ***************************************************************************/
 
-boolean usbMode                  = false; //to use usb for serial communication as oppose to MIDI - sets baud rate to 38400
-
 byte defaultMemoryMap[MEM_MAX] = {
   0x7F,0x01,0x03,0x7F, //memory init check
   0x00, //force mode (forces lsdj to be sl)
@@ -444,17 +442,13 @@ void setup() {
 #ifdef USE_USB
   serial->begin(31250); //31250
 #else
-  if(usbMode == true) {
-    serial->begin(38400);
-  } else {
-    pinMode(pinMidiInputPower,OUTPUT);
-    digitalWrite(pinMidiInputPower,HIGH); // turn on the optoisolator
-    #ifdef USE_LEONARDO
-      Serial1.begin(31250); //31250
-    #else
-      Serial.begin(31250); //31250
-    #endif
-  }
+  pinMode(pinMidiInputPower,OUTPUT);
+  digitalWrite(pinMidiInputPower,HIGH); // turn on the optoisolator
+  #ifdef USE_LEONARDO
+    Serial1.begin(31250); //31250
+  #else
+    Serial.begin(31250); //31250
+  #endif
 #endif
 
 /*

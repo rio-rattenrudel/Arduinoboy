@@ -36,7 +36,7 @@ void modeLSDJMasterSync()
 
     if (serial->available()) {                  //If serial data was send to midi input
       incomingMidiByte = serial->read();            //Read it
-      if(!checkForProgrammerSysex(incomingMidiByte) && !usbMode) serial->write(incomingMidiByte);        //Send it to the midi output
+      if(!checkForProgrammerSysex(incomingMidiByte)) serial->write(incomingMidiByte);        //Send it to the midi output
     }
     readgbClockLine = digitalRead(pinGBClock);    //Read gameboy's clock line
     if(readgbClockLine) {                         //If Gb's Clock is On
