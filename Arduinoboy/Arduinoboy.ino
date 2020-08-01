@@ -183,12 +183,7 @@ HardwareSerial *serial = &Serial1;
 #elif defined (__AVR_ATmega32U4__)
 #define USE_LEONARDO
 #include <MIDIUSB.h>
-#include <PS2Keyboard.h>
 
-// values for the PS/2 Keyboard input
-#define PS2_DATA_PIN 7
-#define PS2_CLOCK_PIN 3
-PS2Keyboard keyboard;
 #define GB_SET(bit_cl, bit_out, bit_in) PORTF = (PINF & B00011111) | ((bit_cl<<7) | ((bit_out)<<6) | ((bit_in)<<5))
 // ^ The reason for not using digitalWrite is to allign clock and data pins for the GB shift reg.
 // Pin distribution comes from official Arduino Leonardo documentation
@@ -196,9 +191,11 @@ PS2Keyboard keyboard;
 int pinGBClock     = A0;    // Analog In 0 - clock out to gameboy
 int pinGBSerialOut = A1;    // Analog In 1 - serial data to gameboy
 int pinGBSerialIn  = A2;    // Analog In 2 - serial data from gameboy
-int pinMidiInputPower = 4; // power pin for midi input opto-isolator
-int pinStatusLed = 13; // Status LED
-int pinLeds[] = {12,11,10,9,8,13}; // LED Pins
+int pinMidiInputPower = 0; // power pin for midi input opto-isolator
+int pinStatusLed = 8; // Status LED
+int pinLeds[] = {3, 4, 5, 6, 7, 8}; // LED Pins
+//int pinStatusLed = 13; // Status LED
+//int pinLeds[] = {12,11,10,9,8,13}; // LED Pins
 int pinButtonMode = 2; //toggle button for selecting the mode
 
 HardwareSerial *serial = &Serial1;
