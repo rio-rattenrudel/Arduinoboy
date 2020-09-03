@@ -2,7 +2,9 @@ void modeProgrammer()
 {
   while(sysexProgrammingConnected || sysexProgrammingMode) {
     checkProgrammerConnected();
+    #ifndef USE_ESP32
     if (serial->available()) checkForProgrammerSysex(serial->read());
+    #endif
     updateProgrammerLeds();
     setMode();
     usbMidiUpdate();
@@ -33,7 +35,9 @@ void programmerSendSettings()
   sysexData[2] = 0x40;
   memcpy(&sysexData[3], memory, MEM_MAX+1);
   sysexData[MEM_MAX+3] = 0xF7;
+#ifndef USE_ESP32
   serial->write(sysexData, MEM_MAX+4);
+#endif
 #ifdef USE_TEENSY
   usbMIDI.sendSysEx(MEM_MAX+4, sysexData);
 #endif
@@ -42,7 +46,9 @@ void programmerSendSettings()
 void setProgrammerRequestConnect()
 {
   uint8_t data[4] = {0xF0,sysexManufacturerId,65,0xF7};
+#ifndef USE_ESP32
   serial->write(data, 4);
+#endif
 #ifdef USE_TEENSY
   usbMIDI.sendSysEx(4, data);
 #endif
@@ -84,7 +90,9 @@ void programmerSendConnectRequest()
 {
   if(millis() > (sysexProgrammerLastSent+sysexProgrammerCallTime)) {
     uint8_t data[6] = {0xF0, sysexManufacturerId, 0x7F, defaultMemoryMap[MEM_VERSION_FIRST], defaultMemoryMap[MEM_VERSION_SECOND], 0xF7};
+#ifndef USE_ESP32
     serial->write(data, 6);
+#endif
 #ifdef USE_TEENSY
     usbMIDI.sendSysEx(6, data);
 #endif
@@ -129,8 +137,10 @@ void setMode(byte mode)
 
 void sendMode()
 {
+#ifndef USE_ESP32
   uint8_t data[4] = {0xF0, sysexManufacturerId, memory[MEM_MODE], 0xF7};
   serial->write(data, 4);
+#endif
 #ifdef USE_TEENSY
   usbMIDI.sendSysEx(4, data);
 #endif

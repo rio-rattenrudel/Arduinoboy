@@ -142,6 +142,25 @@ byte memory[MEM_MAX];
 * Lets Assign our Arduino Pins .....
 ***************************************************************************/
 
+/***************************************************************************
+* ESP-32
+***************************************************************************/
+#if defined (ESP32)
+#define USE_ESP32 1
+#include <BLE-MIDI.h>
+#include <hardware/BLE-MIDI_ESP32.h>
+
+#define GB_SET(bit_cl,bit_out,bit_in) GPIOB_PDOR = (GPIOB_PDIR & 0xfffffff4) | ((bit_in<<3) | (bit_out<<1) | bit_cl)
+
+int pinGBClock     = 16;    // Analog In 0 - clock out to gameboy
+int pinGBSerialOut = 17;    // Analog In 1 - serial data to gameboy
+int pinGBSerialIn  = 18;    // Analog In 2 - serial data from gameboy
+int pinMidiInputPower = 0; // Not used!
+int pinStatusLed = 13; // Status LED
+int pinLeds[] = {23,22,21,20,4,13}; // LED Pins
+int pinButtonMode = 2; //toggle button for selecting the mode
+
+BLEMIDI_CREATE_ESP32_INSTANCE("Arduinoboy")
 
 /***************************************************************************
 * Teensy 3.2, Teensy LC
@@ -150,7 +169,7 @@ byte memory[MEM_MAX];
 * Feel free to change, all related config in is this block.
 * Be sure to compile
 ***************************************************************************/
-#if defined (__MK20DX256__) || defined (__MK20DX128__) || defined (__MKL26Z64__)
+#elif defined (__MK20DX256__) || defined (__MK20DX128__) || defined (__MKL26Z64__)
 #define USE_TEENSY 1
 #define USE_USB 1
 #include <MIDI.h>
@@ -438,8 +457,9 @@ void setup() {
 /*
   Set MIDI Serial Rate
 */
-
-#ifdef USE_USB
+#ifdef USE_ESP32
+  MIDI.begin(MIDI_CHANNEL_OMNI);
+#elif USE_USB
   serial->begin(31250); //31250
 #else
   pinMode(pinMidiInputPower,OUTPUT);

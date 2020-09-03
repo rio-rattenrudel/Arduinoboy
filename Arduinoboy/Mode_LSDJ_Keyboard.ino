@@ -40,70 +40,70 @@ void modeLSDJKeyboard()
 {
   while(1){                              //Loop foreverrrr
   modeLSDJKeyboardMidiReceive();
-  if (serial->available()) {          //If MIDI is sending
-    incomingMidiByte = serial->read();    //Get the byte sent from MIDI
-    if(!checkForProgrammerSysex(incomingMidiByte)) serial->write(incomingMidiByte);//Echo the Byte to MIDI Output
+  // if (serial->available()) {          //If MIDI is sending
+  //   incomingMidiByte = serial->read();    //Get the byte sent from MIDI
+  //   if(!checkForProgrammerSysex(incomingMidiByte)) serial->write(incomingMidiByte);//Echo the Byte to MIDI Output
 
 
-    /***************************************************************************
-     * Midi to LSDJ Keyboard Handling                                          *
-     ***************************************************************************/
-    //If the byte is a Status Message
-    if(incomingMidiByte & 0x80) {
-      /* Status message Information (# = midi channel 0 to F [1-16] )
-          0x8# = Note Off
-          0x9# = Note On
-          0xA# = AfterTouch (ie, key pressure)
-          0xB# = Control Change
-          0xC# = Program (patch) change
-          0xD# = Channel Pressure
-          0xE# = Pitch Wheel
-          0xF0 - 0xF7 = System Common Messages
-          0xF8 - 0xFF = System Realtime Messages
-      */
+  //   /***************************************************************************
+  //    * Midi to LSDJ Keyboard Handling                                          *
+  //    ***************************************************************************/
+  //   //If the byte is a Status Message
+  //   if(incomingMidiByte & 0x80) {
+  //     /* Status message Information (# = midi channel 0 to F [1-16] )
+  //         0x8# = Note Off
+  //         0x9# = Note On
+  //         0xA# = AfterTouch (ie, key pressure)
+  //         0xB# = Control Change
+  //         0xC# = Program (patch) change
+  //         0xD# = Channel Pressure
+  //         0xE# = Pitch Wheel
+  //         0xF0 - 0xF7 = System Common Messages
+  //         0xF8 - 0xFF = System Realtime Messages
+  //     */
 
-      //Weee hello world bitwise and. ... make the second hex digit zero so we can have a simple case statement
-      // - the second digit is usually the midi channel 0 to F (1-16) unless its a 0xF0 message...
-      switch (incomingMidiByte & 0xF0) {
-        case 0x90:
-          //Note-On Status Message (Note: we have to treat this carefully because note status isnt sent on every note-on, damn it)
-          //There are 3 bytes total we need: Channel, Note, and velocity, these wil be assigned to a array until we have the velocity,
-          //at that point we can then call our note out function to LSDJ
-          midiNoteOnMode = true;                    //Set our stupid "Note on mode" on
-          midiData[0] = incomingMidiByte;   //Assign the byte to the first position of a data array. (this is the midi channel)
-          midiData[1] = false;              //Force the second position to false (this will hold the note number)
-          break;
-        case 0xC0:
-          //Program change message
-          midiProgramChange = true;                   //Set our silly "Program Change mode" ... we need to get the next byte later
-          midiNoteOnMode = false;                     //Turn Note-on mode off
-          midiData[0] = incomingMidiByte - 48;//Set the number to a "note on" message so we can use the same "channel" variable as note on messages
-          break;
-        case 0xF0:
-           //Do nothing, these dont interfear with our note-on mode
-          break;
-        default:
-          //Turn Note-On mode off
-          midiNoteOnMode = false;
-          break;
-      }
-    } else if(midiNoteOnMode) {
-      //It wasnt a status bit, so lets assume it was a note message if the last status message was note-on.
-      if(!midiData[1]) {
-         //If we dont have a note number, we assume this byte is the note number, get it...
-         midiData[1] = incomingMidiByte;
-      } else {
-         //We have our note and channel, so call our note function...
+  //     //Weee hello world bitwise and. ... make the second hex digit zero so we can have a simple case statement
+  //     // - the second digit is usually the midi channel 0 to F (1-16) unless its a 0xF0 message...
+  //     switch (incomingMidiByte & 0xF0) {
+  //       case 0x90:
+  //         //Note-On Status Message (Note: we have to treat this carefully because note status isnt sent on every note-on, damn it)
+  //         //There are 3 bytes total we need: Channel, Note, and velocity, these wil be assigned to a array until we have the velocity,
+  //         //at that point we can then call our note out function to LSDJ
+  //         midiNoteOnMode = true;                    //Set our stupid "Note on mode" on
+  //         midiData[0] = incomingMidiByte;   //Assign the byte to the first position of a data array. (this is the midi channel)
+  //         midiData[1] = false;              //Force the second position to false (this will hold the note number)
+  //         break;
+  //       case 0xC0:
+  //         //Program change message
+  //         midiProgramChange = true;                   //Set our silly "Program Change mode" ... we need to get the next byte later
+  //         midiNoteOnMode = false;                     //Turn Note-on mode off
+  //         midiData[0] = incomingMidiByte - 48;//Set the number to a "note on" message so we can use the same "channel" variable as note on messages
+  //         break;
+  //       case 0xF0:
+  //          //Do nothing, these dont interfear with our note-on mode
+  //         break;
+  //       default:
+  //         //Turn Note-On mode off
+  //         midiNoteOnMode = false;
+  //         break;
+  //     }
+  //   } else if(midiNoteOnMode) {
+  //     //It wasnt a status bit, so lets assume it was a note message if the last status message was note-on.
+  //     if(!midiData[1]) {
+  //        //If we dont have a note number, we assume this byte is the note number, get it...
+  //        midiData[1] = incomingMidiByte;
+  //     } else {
+  //        //We have our note and channel, so call our note function...
 
-         playLSDJNote(midiData[0], midiData[1], incomingMidiByte);
-         midiData[1] = false; //Set the note to false, forcing to capture the next note
-      }
-    } else if (midiProgramChange) {
-        changeLSDJInstrument(midiData[0], incomingMidiByte);
-        midiProgramChange = false;
-        midiData[0] = false;
-    }
-  }
+  //        playLSDJNote(midiData[0], midiData[1], incomingMidiByte);
+  //        midiData[1] = false; //Set the note to false, forcing to capture the next note
+  //     }
+  //   } else if (midiProgramChange) {
+  //       changeLSDJInstrument(midiData[0], incomingMidiByte);
+  //       midiProgramChange = false;
+  //       midiData[0] = false;
+  //   }
+  // }
 
   updateStatusLed();        // Update our status blinker
   setMode();                // Check if mode button was depressed

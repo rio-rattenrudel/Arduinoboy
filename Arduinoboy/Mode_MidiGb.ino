@@ -21,6 +21,14 @@ void modeMidiGbSetup()
   usbMIDI.setHandleRealTimeSystem(NULL);
 #endif
 
+#ifdef USE_ESP32
+  MIDI.setHandleNoteOn(handleNoteOn);
+  MIDI.setHandleNoteOff(handleNoteOff);
+  MIDI.setHandleControlChange(handleControlChange);
+  MIDI.setHandleProgramChange(handleProgramChange);
+  MIDI.setHandlePitchBend(handlePitchBend);
+#endif
+
   blinkMaxCount=1000;
   modeMidiGb();
 }
@@ -29,71 +37,9 @@ void modeMidiGb()
 {
   boolean sendByte = false;
   while(1){                                //Loop foreverrrr
-    modeMidiGbUsbMidiReceive();
-
-    if (serial->available()) {          //If MIDI is sending
-      incomingMidiByte = serial->read();    //Get the byte sent from MIDI
-
-      if(!checkForProgrammerSysex(incomingMidiByte)) serial->write(incomingMidiByte); //Echo the Byte to MIDI Output
-
-      if(incomingMidiByte & 0x80) {
-        switch (incomingMidiByte & 0xF0) {
-          case 0xF0:
-            midiValueMode = false;
-            break;
-          default:
-            sendByte = false;
-            midiStatusChannel = incomingMidiByte&0x0F;
-            midiStatusType    = incomingMidiByte&0xF0;
-            if(midiStatusChannel == memory[MEM_MGB_CH]) {
-               midiData[0] = midiStatusType;
-               sendByte = true;
-            } else if (midiStatusChannel == memory[MEM_MGB_CH+1]) {
-               midiData[0] = midiStatusType+1;
-               sendByte = true;
-            } else if (midiStatusChannel == memory[MEM_MGB_CH+2]) {
-               midiData[0] = midiStatusType+2;
-               sendByte = true;
-            } else if (midiStatusChannel == memory[MEM_MGB_CH+3]) {
-               midiData[0] = midiStatusType+3;
-               sendByte = true;
-            } else if (midiStatusChannel == memory[MEM_MGB_CH+4]) {
-               midiData[0] = midiStatusType+4;
-               sendByte = true;
-            } else {
-              midiValueMode  =false;
-              midiAddressMode=false;
-            }
-            if(sendByte) {
-              statusLedOn();
-              sendByteToGameboy(midiData[0]);
-              delayMicroseconds(GB_MIDI_DELAY);
-              midiValueMode  =false;
-              midiAddressMode=true;
-            }
-           break;
-        }
-      } else if (midiAddressMode){
-        midiAddressMode = false;
-        midiValueMode = true;
-        midiData[1] = incomingMidiByte;
-        sendByteToGameboy(midiData[1]);
-        delayMicroseconds(GB_MIDI_DELAY);
-      } else if (midiValueMode) {
-        midiData[2] = incomingMidiByte;
-        midiAddressMode = true;
-        midiValueMode = false;
-
-        sendByteToGameboy(midiData[2]);
-        delayMicroseconds(GB_MIDI_DELAY);
-        statusLedOn();
-        blinkLight(midiData[0],midiData[2]);
-      }
-    } else {
-      setMode();                // Check if mode button was depressed
-      updateBlinkLights();
-      updateStatusLed();
-    }
+    setMode();                // Check if mode button was depressed
+    updateBlinkLights();
+    updateStatusLed();
   }
 }
 
@@ -117,6 +63,56 @@ void sendByteToGameboy(byte send_byte)
 #endif
    send_byte <<= 1;
  }
+}
+
+void handleNoteOn(byte channel, byte note, byte velocity) {
+  int channel = convertChannel(channel);
+  uint8_t s = 0x90 + ch;
+  sendByteToGameboy(s);
+  delayMicroseconds(GB_MIDI_DELAY);
+  sendByteToGameboy(velocity);
+  delayMicroseconds(GB_MIDI_DELAY);
+  sendByteToGameboy(note);
+  delayMicroseconds(GB_MIDI_DELAY);
+  blinkLight(s, note);
+}
+
+void handleNoteOff(byte channel, byte note, byte velocity) {
+  int channel = convertChannel(channel);
+}
+
+void handleControlChange(byte channel, byte number, byte velocity) {
+  int channel = convertChannel(channel);
+}
+
+void handleProgramChange(byte channel, byte number) {
+  int channel = convertChannel(channel);
+}
+
+void handlePitchBend(byte channel, int bend) {
+  int channel = convertChannel(channel);
+}
+
+int convertChannel(byte channel) {
+  boolean send = false;
+  if(channel == memory[MEM_MGB_CH]) {
+      channel = 0;
+      send = true;
+  } else if (channel == memory[MEM_MGB_CH+1]) {
+      channel = 1;
+      send = true;
+  } else if (channel == memory[MEM_MGB_CH+2]) {
+      channel = 2;
+      send = true;
+  } else if (channel == memory[MEM_MGB_CH+3]) {
+      channel = 3;
+      send = true;
+  } else if (channel == memory[MEM_MGB_CH+4]) {
+      channel = 4;
+      send = true;
+  }
+  if(!send) return -1;
+  return channel
 }
 
 void modeMidiGbUsbMidiReceive()
