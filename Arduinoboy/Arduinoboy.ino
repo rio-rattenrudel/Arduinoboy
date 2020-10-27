@@ -247,6 +247,7 @@ byte incomingPS2Byte;
 #define PS2_DATA_PIN 7
 #define PS2_CLOCK_PIN 3
 PS2Keyboard keyboard;
+#define USE_PS2;
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
 #define GB_SET(bit_cl,bit_out,bit_in) PORTF = (PINF & B11111000) | ((bit_in<<2) | ((bit_out)<<1) | bit_cl)
 #elif defined(__AVR_ATmega4809__)
