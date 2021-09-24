@@ -96,8 +96,19 @@ void modeMidiGb()
             }
             if(sendByte) {
               statusLedOn();
-              sendByteToGameboy(midiData[0]);
-              delayMicroseconds(GB_MIDI_DELAY);
+              
+              //####################################
+              //# RIO: CC 16 PitchWheel Mapping
+              //####################################
+              // handle CC (3bytes) later...
+              if (midiData[0] != 0xB0) {
+                sendByteToGameboy(midiData[0]);
+                delayMicroseconds(GB_MIDI_DELAY);
+              }
+              //####################################
+              //# RIO: END MODIFICATION
+              //####################################
+              
               midiValueMode  =false;
               midiAddressMode=true;
             }
@@ -107,8 +118,28 @@ void modeMidiGb()
         midiAddressMode = false;
         midiValueMode = true;
         midiData[1] = incomingMidiByte;
-        sendByteToGameboy(midiData[1]);
+
+        //####################################
+        //# RIO: CC 16 PitchWheel Mapping
+        //####################################
+        if(sendByte) {
+          // send CC address or map ...
+          if (midiData[0] == 0xB0) {
+            if (midiData[1] == 16)  sendByteToGameboy(0xE0);        // map to pitchwheel
+            else                    sendByteToGameboy(midiData[0]); // default
+            delayMicroseconds(GB_MIDI_DELAY);
+          }
+        }
+
+        // send CC or send corrected PW LSB...
+        if (midiData[0] == 0xB0 && midiData[1] == 16)
+          sendByteToGameboy(midiData[2] == 0x40 ? 0x00 : midiData[2]);
+        else sendByteToGameboy(midiData[1]);
         delayMicroseconds(GB_MIDI_DELAY);
+        //####################################
+        //# RIO: END MODIFICATION
+        //####################################
+
       } else if (midiValueMode) {
         midiData[2] = incomingMidiByte;
         midiAddressMode = true;
@@ -220,10 +251,25 @@ void modeMidiGbUsbMidiReceive()
                 blinkLight(s, usbMIDI.getData2());
             break;
             case 0xB0: // CC
-                sendByteToGameboy(0xB0+ch);
-                delayMicroseconds(GB_MIDI_DELAY);
-                sendByteToGameboy(usbMIDI.getData1());
-                delayMicroseconds(GB_MIDI_DELAY);
+
+                //####################################
+                //# RIO: CC 16 PitchWheel Mapping
+                //####################################
+                if (usbMIDI.getData1() == 16) {
+                  sendByteToGameboy(0xE0+ch);
+                  delayMicroseconds(GB_MIDI_DELAY);
+                  sendByteToGameboy(usbMIDI.getData2() == 0x40 ? 0x00 : usbMIDI.getData2());
+                  delayMicroseconds(GB_MIDI_DELAY);
+                } else {
+                  sendByteToGameboy(0xB0+ch);
+                  delayMicroseconds(GB_MIDI_DELAY);
+                  sendByteToGameboy(usbMIDI.getData1());
+                  delayMicroseconds(GB_MIDI_DELAY);
+                }
+                //####################################
+                //# RIO: END MODIFICATION
+                //####################################
+
                 sendByteToGameboy(usbMIDI.getData2());
                 delayMicroseconds(GB_MIDI_DELAY);
                 blinkLight(0xB0+ch, usbMIDI.getData2());
@@ -323,10 +369,25 @@ void modeMidiGbUsbMidiReceive()
           blinkLight(s, rx.byte2);
           break;
         case 0x0B: // CC
-          sendByteToGameboy(0xB0 + ch);
-          delayMicroseconds(GB_MIDI_DELAY);
-          sendByteToGameboy(rx.byte2);
-          delayMicroseconds(GB_MIDI_DELAY);
+
+          //####################################
+          //# RIO: CC 16 PitchWheel Mapping
+          //####################################
+          if (rx.byte2 == 16) {
+            sendByteToGameboy(0xE0+ch);
+            delayMicroseconds(GB_MIDI_DELAY);
+            sendByteToGameboy(rx.byte3 == 0x40 ? 0x00 : rx.byte3);
+            delayMicroseconds(GB_MIDI_DELAY);
+          } else {
+            sendByteToGameboy(0xB0+ch);
+            delayMicroseconds(GB_MIDI_DELAY);
+            sendByteToGameboy(rx.byte2);
+            delayMicroseconds(GB_MIDI_DELAY);
+          }
+          //####################################
+          //# RIO: END MODIFICATION
+          //####################################
+
           sendByteToGameboy(rx.byte3);
           delayMicroseconds(GB_MIDI_DELAY);
           blinkLight(0xB0 + ch, rx.byte2);
